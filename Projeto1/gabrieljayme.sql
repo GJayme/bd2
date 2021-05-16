@@ -100,24 +100,32 @@ insert into pessoa(cpf, nome, sexo, dt_nascimento, telefone)
     values('66666666666', 'Vinicius G', 'M', to_date('10/01/1989', 'dd/mm/yyyy'), '16926020940');
 insert into pessoa(cpf, nome, sexo, dt_nascimento, telefone)
     values('77777777777', 'Vinicius M', 'M', to_date('18/11/1991', 'dd/mm/yyyy'), '16823121941');
+insert into pessoa(cpf, nome, sexo, dt_nascimento, telefone)
+    values('88888888888', 'Maria C Rodrigues', 'F', to_date('22/06/1985', 'dd/mm/yyyy'), '19923921237');
+insert into pessoa(cpf, nome, sexo, dt_nascimento, telefone)
+    values('99999999999', 'Pedro P', 'M', to_date('31/10/1980', 'dd/mm/yyyy'), '1988921231');
 
 --Aluno:
 insert into aluno(cpf, status_mensalidade, vencimento_mensalidade, valor_mensalidade)
-    values ('11111111111', 'P', to_date('15/06/2021', 'dd/mm/yyyy'), 80);
+    values ('11111111111', 'P', to_date('15/06/2021', 'dd/mm/yyyy'), 60);
 insert into aluno(cpf, status_mensalidade, vencimento_mensalidade, valor_mensalidade)
     values ('22222222222', 'P', to_date('18/06/2021', 'dd/mm/yyyy'), 80);
 insert into aluno(cpf, status_mensalidade, vencimento_mensalidade, valor_mensalidade)
-    values ('33333333333', 'N', to_date('15/05/2021', 'dd/mm/yyyy'), 80);
+    values ('33333333333', 'N', to_date('15/05/2021', 'dd/mm/yyyy'), 70);
 insert into aluno(cpf, status_mensalidade, vencimento_mensalidade, valor_mensalidade)
     values ('66666666666', 'P', to_date('14/06/2021', 'dd/mm/yyyy'), 80);
 insert into aluno(cpf, status_mensalidade, vencimento_mensalidade, valor_mensalidade)
     values ('77777777777', 'P', to_date('10/06/2021', 'dd/mm/yyyy'), 80);
+insert into aluno(cpf, status_mensalidade, vencimento_mensalidade, valor_mensalidade)
+    values ('88888888888', 'P', to_date('20/06/2021', 'dd/mm/yyyy'), 95);
 
 --Instrutor:
 insert into instrutor(cpf, salario, cref, rua, numero, cep)
     values ('44444444444', 2500, '142974-G/SP', 'Sem fim', 666, '14146029');
 insert into instrutor(cpf, salario, cref, rua, numero, cep)
     values ('55555555555', 2300, '218051-F/SP', 'Rita Candida', 28, '18156122');
+insert into instrutor(cpf, salario, cref, rua, numero, cep)
+    values ('99999999999', 2200, '119090-H/SP', 'Rua Larga', 2020, '12126899');
 
 --Avaliação Física:
 insert into avaliacao_fisica(id, cpf_aluno, peso, altura, porcentagem_gordura, porcentagem_massa_magra)
@@ -130,6 +138,8 @@ insert into avaliacao_fisica(id, cpf_aluno, peso, altura, porcentagem_gordura, p
     values (avaliacao_fisica_sequence.nextval, '66666666666', 105, 173.5, 50, 45);
 insert into avaliacao_fisica(id, cpf_aluno, peso, altura, porcentagem_gordura, porcentagem_massa_magra)
     values (avaliacao_fisica_sequence.nextval, '77777777777', 55, 175.5, 10, 50);
+insert into avaliacao_fisica(id, cpf_aluno, peso, altura, porcentagem_gordura, porcentagem_massa_magra)
+    values (avaliacao_fisica_sequence.nextval, '88888888888', 75, 175.5, 20, 55);
 
 -- Treino:
 insert into treino(id, cpf_instrutor, nome, tipo)
@@ -141,7 +151,9 @@ insert into treino(id, cpf_instrutor, nome, tipo)
 insert into treino(id, cpf_instrutor, nome, tipo)
     values (treino_sequence.nextval, '55555555555', 'Emagrecimento intermediário V3', 'emagrecimento');
 insert into treino(id, cpf_instrutor, nome, tipo)
-    values (treino_sequence.nextval, '44444444444', 'Emagrecimento iniciante V2', 'resistencia');
+    values (treino_sequence.nextval, '44444444444', 'Emagrecimento iniciante V2', 'emagrecimento');
+insert into treino(id, cpf_instrutor, nome, tipo)
+    values (treino_sequence.nextval, '44444444444', 'Resistencia V2', 'resistencia');
 
 --Exercicio:
 insert into exercicio(id, grupo_muscular, nome, serie, repeticoes)
@@ -184,6 +196,8 @@ insert into aluno_treino(cpf_aluno, id_treino)
     values ('66666666666', 4);
 insert into aluno_treino(cpf_aluno, id_treino)
     values ('77777777777', 5);
+insert into aluno_treino(cpf_aluno, id_treino)
+    values ('88888888888', 6);
 
 --Treino_exercicio:
 insert into treino_exercicio(id_treino, id_exercicio, qtde_exercicio)
@@ -222,6 +236,8 @@ insert into treino_exercicio(id_treino, id_exercicio, qtde_exercicio)
     values (4, 14, 4);
 insert into treino_exercicio(id_treino, id_exercicio, qtde_exercicio)
     values (5, 13, 1);
+insert into treino_exercicio(id_treino, id_exercicio, qtde_exercicio)
+    values (6, 14, 1);
 
 -- Visões:
 --View para listar todos os Alunos:
@@ -237,15 +253,54 @@ create view v_todos_instrutores(instrutor) as
 --View para listar todos os Treinos com seus Exercícios:
 create view v_todos_treinos_exercicios(id_treino, nome_treino, nome_exercicio) as
     select t.id, t.nome, e.nome from treino_exercicio te, treino t, exercicio e
-    where te.id_treino = t.id and te.id_exercicio = e.id;
+    where te.id_treino = t.id and te.id_exercicio = e.id
+    order by id_treino;
 
 --todo Visão Materializada:
 
---todo 8 SELECT
+-- 8 SELECT:
+-- 1. Listar todos os exercicios do treino do aluno Gabriel Jayme:
+select e.nome from aluno_treino at
+    join treino t on at.id_treino = t.id
+    join treino_exercicio te on t.id = te.id_treino
+    join exercicio e on te.id_exercicio = e.id
+    join pessoa p on at.cpf_aluno = p.cpf
+    where p.NOME = 'Gabriel Jayme';
+
+-- 2. Listar os exercícios do treino Emagrecimento intermediário V3:
+select e.nome from treino t
+    join treino_exercicio te on t.id = te.id_treino
+    join exercicio e on e.id = te.id_exercicio
+    where t.NOME = 'Emagrecimento intermediário V3';
+
+-- 3. Listar o nome das mulheres que frequentam o estudio e são instrutoras:
+select p.nome from instrutor i, pessoa p
+    where i.cpf = p.cpf and p.SEXO = 'F';
+
+-- 4. Listar todos os nomes dos alunos que apresentam 40 ou mais porcentagem de gordura:
+select p.nome from aluno a
+    join avaliacao_fisica af on af.cpf_aluno = a.cpf
+    join pessoa p on a.cpf = p.cpf
+    where af.porcentagem_gordura >= 40;
+
+-- 5. Qual média da mensalidade cobrada no Estudio:
+select round(avg(valor_mensalidade)) media_mensalidade from aluno;
+
+-- 6. Quantos alunos do sexo masculino e do sexo feminino frequentam o estudio:
+select p.sexo, count(*) from aluno
+    join pessoa p on aluno.cpf = p.cpf
+    group by p.SEXO;
+
+-- 7. Qual a média salarial dos Instrutores do Estudio separado por sexo:
+select p.sexo, round(avg(salario)) media_salaria from instrutor
+    join pessoa p on instrutor.cpf = p.cpf
+    group by p.sexo;
+
+-- 8. Listar todos os exercícios cadastrados ordenados pelo grupo muscular:
+select grupo_muscular, nome from exercicio order by exercicio.grupo_muscular;
+
 
 --todo novo usuário
-
-
 
 select * from v_todos_treinos_exercicios;
 select * from aluno_treino;
