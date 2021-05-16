@@ -9,6 +9,7 @@ grant
     select any table,
     update any table,
     create any sequence,
+    create any materialized view,
     create any view to desenvolvedor;
 grant desenvolvedor to gabrieljayme;
 alter user gabrieljayme quota unlimited on users;

@@ -256,7 +256,14 @@ create view v_todos_treinos_exercicios(id_treino, nome_treino, nome_exercicio) a
     where te.id_treino = t.id and te.id_exercicio = e.id
     order by id_treino;
 
---todo Visão Materializada:
+--View Materializada:
+create materialized view mensalidade_total_alunos_mes_06_2021
+    build deferred
+    refresh complete
+    on demand
+    as select sum(valor_mensalidade) total_mensalidade from aluno
+        where vencimento_mensalidade >= to_date('01/06/2021', 'dd/mm/yyyy')
+                  and vencimento_mensalidade <= to_date('30/06/2021', 'dd/mm/yyyy');
 
 -- 8 SELECT:
 -- 1. Listar todos os exercicios do treino do aluno Gabriel Jayme:
