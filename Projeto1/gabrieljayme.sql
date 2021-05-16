@@ -298,11 +298,3 @@ select p.sexo, round(avg(salario)) media_salaria from instrutor
 
 -- 8. Listar todos os exercícios cadastrados ordenados pelo grupo muscular:
 select grupo_muscular, nome from exercicio order by exercicio.grupo_muscular;
-
-
---todo novo usuário
-
-select * from v_todos_treinos_exercicios;
-select * from aluno_treino;
-
-
