@@ -133,26 +133,3 @@ EXCEPTION
     when others then
         DBMS_OUTPUT.PUT_LINE('Erro ' || sqlerrm);
 end;
-
--- Exercício:
--- 1. Faça um bloco PL/SQL que liste a média salarial dos atletas e, para cada atleta, liste o seu id,
--- nome, cpf e salário, e se ganha acima ou não da média salarial dos atletlas.
-declare
-    v_media_salarial atleta.salario%type := 0;
-    cursor c_atleta is
-        select * from ATLETA;
-begin
-    SELECT AVG(salario) into v_media_salarial from ATLETA;
-    DBMS_OUTPUT.PUT_LINE('Média salarial dos atletas: ' || v_media_salarial);
-
-    for v_aux2 in c_atleta loop
-        if v_aux2.SALARIO > v_media_salarial then
-            DBMS_OUTPUT.PUT_LINE('Nome: ' || v_aux2.NOME || ', CPF: ' || v_aux2.CPF || ', Salário: ' || v_aux2.SALARIO || ', Ganha Acima da média!');
-        elsif v_aux2.SALARIO < v_media_salarial then
-            DBMS_OUTPUT.PUT_LINE('Nome: ' || v_aux2.NOME || ', CPF: ' || v_aux2.CPF || ', Salário: ' || v_aux2.SALARIO || ', Ganha Abaixo da média!');
-        else
-            DBMS_OUTPUT.PUT_LINE('Nome: ' || v_aux2.NOME || ', CPF: ' || v_aux2.CPF || ', Salário: ' || v_aux2.SALARIO || ', Salário igual a média!');
-        end if;
-    end loop;
-end;
-
