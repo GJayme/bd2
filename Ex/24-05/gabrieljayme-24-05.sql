@@ -70,7 +70,22 @@ end;
 
 -- 4. Escreva um programa que atualize o salário e endereço do atlta de ID 15 com os dados do atleta cujo nome comece com Grace.
 -- Se não houver nenhuma Grace, o salário deve ser o salário médio dos atletas, e o endereço deve ser nulo.
-
+declare
+    v_sal   atleta.salario%type;
+    v_end   atleta.ENDERECO%type;
+    v_media number;
+    cursor c_atleta_grace is select SALARIO, ENDERECO
+                             from HR.ATLETA
+                             where NOME like '%Grace%';
+begin
+    open c_atleta_grace;
+    fetch c_atleta_grace into v_sal, v_end;
+    if c_atleta_grace%notfound then
+        select avg(SALARIO) into v_media from HR.ATLETA;
+        update HR.ATLETA set SALARIO = v_media, ENDERECO = v_end where id = 15;
+    end if;
+    close c_atleta_grace;
+end;
 
 -- 5.
 declare
