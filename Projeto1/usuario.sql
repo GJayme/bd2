@@ -1,6 +1,6 @@
 -- Comando Usuário:
 --Inserir ao menos uma linha em cada tabela que pode dar insert:
-insert into gabrieljayme.pessoa(cpf, nome, sexo, dt_nascimento, telefone)
+insert into GABRIELJAYME.pessoa(cpf, nome, sexo, dt_nascimento, telefone)
     values('19191919191', 'Lara J', 'F', to_date('20/10/1999', 'dd/mm/yyyy'), '1686621626');
 
 insert into exercicio(id, grupo_muscular, nome, serie, repeticoes)
@@ -9,5 +9,5 @@ insert into exercicio(id, grupo_muscular, nome, serie, repeticoes)
 -- Consulta de dados:
 
 select * from GABRIELJAYME.V_TODOS_TREINOS_EXERCICIOS;
-select * from EXERCICIO;
-select * from PESSOA;
+select * from GABRIELJAYME.EXERCICIO;
+select * from GABRIELJAYME.PESSOA;
