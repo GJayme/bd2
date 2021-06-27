@@ -84,6 +84,26 @@ create table treino_exercicio(
     constraint treino_exercicio_pk primary key (id_treino, id_exercicio)
 );
 
+create table audit_aluno_mensalidade(
+    cpf                    varchar2(11) not null,
+    old_valor_mensalidade  number(8,2) not null,
+    new_valor_mensalidade  number(8,2) not null,
+    data_alt               timestamp,
+    constraint audit_aluno_mensalidade_fk foreign key (cpf) references aluno(cpf),
+    constraint audit_aluno_mensalidade_pk primary key (cpf, data_alt)
+);
+
+create table audit_instrutor_salario(
+    cpf                    varchar2(11) not null,
+    old_valor_salario  number(8,2) not null,
+    new_valor_salario  number(8,2) not null,
+    porcentage         number(3,2) not null,
+    data_alt               timestamp,
+    constraint audit_aluno_salario_fk foreign key (cpf) references instrutor(cpf),
+    constraint audit_aluno_salario_pk primary key (cpf, data_alt)
+);
+
+
 -- Insert das tabelas:
 --Pessoa:
 insert into pessoa(cpf, nome, sexo, dt_nascimento, telefone)
@@ -289,7 +309,8 @@ select p.nome from aluno a
     join avaliacao_fisica af on af.cpf_aluno = a.cpf
     join pessoa p on a.cpf = p.cpf
     where af.porcentagem_gordura >= 40;
-    
+
+
 -- 5. Qual média da mensalidade cobrada no Estudio:
 select round(avg(valor_mensalidade)) media_mensalidade from aluno;
 
@@ -305,3 +326,150 @@ select p.sexo, round(avg(salario)) media_salaria from instrutor
 
 -- 8. Listar todos os exercícios cadastrados ordenados pelo grupo muscular:
 select grupo_muscular, nome from exercicio order by exercicio.grupo_muscular;
+
+-- Funções:
+-- 1. Crie uma função chamada FU_GET_EXERCICIOS_FEITOS_ALUNO que receba por parâmetro o nome
+-- do aluno, que retorne a quantidade de todos os exercícios já feito pelo aluno que foi passado via parametro.
+-- Depois faça uma consulta para validar a função:
+
+create or replace function FU_GET_EXERCICIOS_FEITOS_ALUNO(
+    p_nome_aluno pessoa.nome%type
+) return number is
+    v_count number;
+begin
+    select count(*) into v_count from aluno_treino at
+        join treino t on at.id_treino = t.id
+        join treino_exercicio te on t.id = te.id_treino
+        join exercicio e on te.id_exercicio = e.id
+        join pessoa p on at.cpf_aluno = p.cpf
+        where p.NOME = p_nome_aluno;
+    return v_count;
+end FU_GET_EXERCICIOS_FEITOS_ALUNO;
+
+select FU_GET_EXERCICIOS_FEITOS_ALUNO('Gabriel Jayme') from dual;
+
+-- 2. Crie uma função chamada FU_GET_ALUNOS_POR_INSTRUTOR_E_SOMA_MENSALIDADE que receba como parâmetro o
+-- nome do instrutor e retorne a soma das mensalidades apenas dos seus alunos.
+-- Depois faça uma consulta para validar a função:
+
+create or replace function FU_GET_SOMA_MENSALIDADE_ALUNOS_POR_INSTRUTOR(
+    p_nome_instrutor pessoa.nome%type
+) return number is
+    v_sum_mensalidade number;
+begin
+    select sum(a.valor_mensalidade) into v_sum_mensalidade from pessoa p
+        join aluno a on p.cpf = a.cpf
+        join aluno_treino at on a.cpf = at.cpf_aluno
+        join treino t on at.id_treino = t.id
+        join instrutor i on t.cpf_instrutor = i.cpf
+        join pessoa p2 on i.CPF = p2.CPF
+        where p2.nome = p_nome_instrutor;
+    return v_sum_mensalidade;
+end FU_GET_SOMA_MENSALIDADE_ALUNOS_POR_INSTRUTOR;
+
+select FU_GET_SOMA_MENSALIDADE_ALUNOS_POR_INSTRUTOR('Livia T') from dual;
+
+-- Procedures:
+-- 1. Crie uma procedure passando o nome do aluno e o novo valor da sua mensalidade. Caso o
+-- aluno não seja encontrado lance uma mensagem notificando o usuário.
+create or replace procedure PR_ATUALIZA_MENSALIDADE(
+    p_nome_aluno pessoa.nome%type,
+    p_nova_mensalidade aluno.valor_mensalidade%type
+) is
+    v_cpf_pessoa pessoa.cpf%type;
+begin
+    select p.cpf into v_cpf_pessoa from pessoa p where nome = p_nome_aluno;
+    update aluno set aluno.valor_mensalidade = p_nova_mensalidade where cpf = v_cpf_pessoa;
+    commit;
+    DBMS_OUTPUT.PUT_LINE('Mensalidade atualizada com sucesso.');
+exception
+    when no_data_found then
+        DBMS_OUTPUT.PUT_LINE('Nenhuma aluno encontrado.');
+    when others then
+        DBMS_OUTPUT.PUT_LINE('Erro ' || sqlerrm);
+end PR_ATUALIZA_MENSALIDADE;
+
+select a.valor_mensalidade from aluno a where cpf = '11111111111';
+call PR_ATUALIZA_MENSALIDADE('Gabriel Jayme', 50);
+select a.valor_mensalidade from aluno a where cpf = '11111111111';
+
+-- 2. Crie uma procedure para listar a avalizações fisica e treino de um aluno, passando o nome por paramentro.
+create or replace procedure PR_TODAS_AVALIACOES(
+    p_nome_aluno pessoa.nome%type
+) is
+    v_cpf_pessoa pessoa.cpf%type;
+    cursor c_avaliacao is
+        select * from avaliacao_fisica where cpf_aluno = v_cpf_pessoa;
+
+    cursor c_exercicios is
+        select e.nome from ALUNO_TREINO at
+            join TREINO t on at.id_treino = t.id
+            join TREINO_EXERCICIO te on t.id = te.id_treino
+            join EXERCICIO e on te.id_exercicio = e.id
+            where at.CPF_ALUNO = v_cpf_pessoa;
+
+begin
+    DBMS_OUTPUT.PUT_LINE('Avaliação:');
+    select p.cpf into v_cpf_pessoa from pessoa p where nome =  p_nome_aluno;
+    for r_avaliacao in c_avaliacao loop
+        DBMS_OUTPUT.PUT_LINE('Peso: ' || r_avaliacao.peso || ', Altura: ' || r_avaliacao.altura || ', Porcentagem de gordura: ' || r_avaliacao.porcentagem_gordura || ', Massa magra: ' || r_avaliacao.porcentagem_massa_magra || '.');
+    end loop;
+    DBMS_OUTPUT.PUT_LINE(' ');
+    DBMS_OUTPUT.PUT_LINE('Exercíos:');
+    for r_exercicio in c_exercicios loop
+        DBMS_OUTPUT.PUT_LINE('Exercício: ' || r_exercicio.nome);
+    end loop;
+end PR_TODAS_AVALIACOES;
+call PR_TODAS_AVALIACOES('Gabriel Jayme');
+
+-- Triggers:
+-- 1. Toda vez que uma mensalidade de um aluno alterar o valor antigo e o novo valor serão registrados
+-- em uma tabela de log, além de registrar o cpf do aluno e a data da alteração.
+create or replace trigger tr_audit_aluno_mensalidade
+    before update of valor_mensalidade
+    on GABRIELJAYME.ALUNO
+    for each row
+    when ( new.VALOR_MENSALIDADE <> old.VALOR_MENSALIDADE)
+begin
+    DBMS_OUTPUT.PUT_LINE('Mensalidade antiga: ' || :old.VALOR_MENSALIDADE);
+    DBMS_OUTPUT.PUT_LINE('Mensalidade nova: ' || :new.VALOR_MENSALIDADE);
+    insert into audit_aluno_mensalidade values (:new.cpf, :old.valor_mensalidade, :new.valor_mensalidade,sysdate);
+end;
+call PR_ATUALIZA_MENSALIDADE('Gabriel Jayme', 220);
+select * from audit_aluno_mensalidade;
+
+-- 2. Toda vez que o salario de um instrutor for atualizado ele salvara o valor antigo, o valor novo em uma
+-- tabela de log, além de calcular e registrar a porcentagem de aumento que ele recebeu.
+create or replace trigger tr_audito_instrutor_salario
+    before update of salario
+    on GABRIELJAYME.INSTRUTOR
+    for each row
+    when ( new.SALARIO <> old.SALARIO)
+declare
+    v_porcentagem number;
+begin
+    DBMS_OUTPUT.PUT_LINE('Salário antigo: ' || :old.salario);
+    DBMS_OUTPUT.PUT_LINE('Salário novo: ' || :new.salario);
+    v_porcentagem := 1 - :old.salario/:new.salario;
+    DBMS_OUTPUT.PUT_LINE('Porcentagem de aumento: ' || v_porcentagem);
+    insert into audit_instrutor_salario values (:new.cpf, :old.salario, :new.salario, v_porcentagem, sysdate);
+end;
+update instrutor set salario = 3000 where cpf='44444444444';
+select * from audit_instrutor_salario;
+
+-- Indices:
+-- 1. Index pessoas(nome):
+create index pessoa_nome_ix on pessoa(nome);
+select p.nome from aluno a
+    join avaliacao_fisica af on af.cpf_aluno = a.cpf
+    join pessoa p on a.cpf = p.cpf
+    where af.porcentagem_gordura >= 40;
+
+-- 2. Index pessoa(sexo):
+select p.nome from instrutor i, pessoa p
+    where i.cpf = p.cpf and p.SEXO = 'F';
+create index pessoa_sexo_ix on pessoa(sexo);
+
+-- 3. Index avaliação_fisica(peso):
+select * from avaliacao_fisica where peso < 70;
+create index avaliacao_fisica_peso on avaliacao_fisica(peso);
