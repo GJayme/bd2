@@ -1,0 +1,47 @@
+;;; 
+Export: Release 18.0.0.0.0 - Production on Sun Jun 27 01:51:40 2021
+Version 18.4.0.0.0
+
+Copyright (c) 1982, 2018, Oracle and/or its affiliates.  All rights reserved.
+;;; 
+Connected to: Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Starting "SYSTEM"."SYS_EXPORT_SCHEMA_01":  system/********@XE schemas=gabrieljayme directory=teste_dump dumpfile=gabrieljayme_schema.dmp logfile=gabrieljayme_logfile.log 
+Processing object type SCHEMA_EXPORT/TABLE/TABLE_DATA
+Processing object type SCHEMA_EXPORT/TABLE/INDEX/STATISTICS/INDEX_STATISTICS
+Processing object type SCHEMA_EXPORT/TABLE/STATISTICS/TABLE_STATISTICS
+Processing object type SCHEMA_EXPORT/STATISTICS/MARKER
+Processing object type SCHEMA_EXPORT/DEFAULT_ROLE
+Processing object type SCHEMA_EXPORT/TABLESPACE_QUOTA
+Processing object type SCHEMA_EXPORT/PRE_SCHEMA/PROCACT_SCHEMA
+Processing object type SCHEMA_EXPORT/SEQUENCE/SEQUENCE
+Processing object type SCHEMA_EXPORT/SEQUENCE/GRANT/OWNER_GRANT/OBJECT_GRANT
+Processing object type SCHEMA_EXPORT/TABLE/TABLE
+Processing object type SCHEMA_EXPORT/TABLE/GRANT/OWNER_GRANT/OBJECT_GRANT
+Processing object type SCHEMA_EXPORT/TABLE/COMMENT
+Processing object type SCHEMA_EXPORT/FUNCTION/FUNCTION
+Processing object type SCHEMA_EXPORT/PROCEDURE/PROCEDURE
+Processing object type SCHEMA_EXPORT/FUNCTION/ALTER_FUNCTION
+Processing object type SCHEMA_EXPORT/PROCEDURE/ALTER_PROCEDURE
+Processing object type SCHEMA_EXPORT/VIEW/VIEW
+Processing object type SCHEMA_EXPORT/VIEW/GRANT/OWNER_GRANT/OBJECT_GRANT
+Processing object type SCHEMA_EXPORT/TABLE/INDEX/INDEX
+Processing object type SCHEMA_EXPORT/TABLE/CONSTRAINT/CONSTRAINT
+Processing object type SCHEMA_EXPORT/TABLE/CONSTRAINT/REF_CONSTRAINT
+Processing object type SCHEMA_EXPORT/TABLE/TRIGGER
+Processing object type SCHEMA_EXPORT/MATERIALIZED_VIEW
+. . exported "GABRIELJAYME"."EXERCICIO"                  7.789 KB      14 rows
+. . exported "GABRIELJAYME"."AVALIACAO_FISICA"           7.617 KB       6 rows
+. . exported "GABRIELJAYME"."INSTRUTOR"                  7.414 KB       3 rows
+. . exported "GABRIELJAYME"."PESSOA"                     7.187 KB       9 rows
+. . exported "GABRIELJAYME"."AUDIT_INSTRUTOR_SALARIO"    6.968 KB       1 rows
+. . exported "GABRIELJAYME"."TREINO"                     6.695 KB       6 rows
+. . exported "GABRIELJAYME"."ALUNO"                      6.570 KB       6 rows
+. . exported "GABRIELJAYME"."AUDIT_ALUNO_MENSALIDADE"      6.5 KB       1 rows
+. . exported "GABRIELJAYME"."TREINO_EXERCICIO"           6.304 KB      19 rows
+. . exported "GABRIELJAYME"."ALUNO_TREINO"               5.656 KB       6 rows
+. . exported "GABRIELJAYME"."MENSALIDADE_TOTAL_ALUNOS_MES_06_2021"      0 KB       0 rows
+Master table "SYSTEM"."SYS_EXPORT_SCHEMA_01" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYSTEM.SYS_EXPORT_SCHEMA_01 is:
+  /home/oracle/gabrieljayme_schema.dmp
+Job "SYSTEM"."SYS_EXPORT_SCHEMA_01" successfully completed at Sun Jun 27 01:53:43 2021 elapsed 0 00:01:50
