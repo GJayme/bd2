@@ -1,0 +1,258 @@
+//Criação do banco:
+use studio-treinamento
+
+//Criação da Collection Alunos
+db.alunos.insertOne(
+    {
+        "_id": 1,
+        "mensalidade": 80,
+        "nome": "Gabriel Jayme",
+        "cpf": "123.456.543-86",
+        "dt_nascimento": "20-09-1991",
+        "telefone": "(16) 99999-8878",
+        "avaliacao_fisica": [
+            {
+                "id_avaliacao": 1,
+                "peso": 65,
+                "altura": 1.75,
+                "porcentagem_gordura": 20,
+                "porcentagem_massa_magra": 45,
+            }
+        ],
+        "treino": [1,2]
+    }
+)
+
+db.alunos.insertOne(
+    {
+        "_id": 2,
+        "mensalidade": 80,
+        "nome": "Leonardo Freitas",
+        "cpf": "323.353.993-06",
+        "dt_nascimento": "23-12-1999",
+        "telefone": "(16) 91192-2800",
+        "avaliacao_fisica": [
+            {
+                "id_avaliacao": 1,
+                "peso": 73,
+                "altura": 1.72,
+                "porcentagem_gordura": 25,
+                "porcentagem_massa_magra": 40,
+            }
+        ],
+        "treino": [3]
+    }
+)
+
+db.alunos.insertOne(
+    {
+        "_id": 3,
+        "mensalidade": 80,
+        "nome": "Vinicius S.",
+        "cpf": "121.151.191-01",
+        "dt_nascimento": "30-10-1988",
+        "telefone": "(16) 91232-3833",
+        "avaliacao_fisica": [
+            {
+                "id_avaliacao": 1,
+                "peso": 90,
+                "altura": 1.74,
+                "porcentagem_gordura": 40,
+                "porcentagem_massa_magra": 40,
+            }
+        ],
+        "treino": [4]
+    }
+)
+
+db.alunos.insertMany([
+    {
+        "_id": 4,
+        "mensalidade": 80,
+        "nome": "Vinicius L.",
+        "cpf": "525.858.991-22",
+        "dt_nascimento": "15-02-1990",
+        "telefone": "(16) 91434-4844",
+        "avaliacao_fisica": [
+            {
+                "id_avaliacao": 1,
+                "peso": 58,
+                "altura": 1.72,
+                "porcentagem_gordura": 18,
+                "porcentagem_massa_magra": 35,
+            }
+        ],
+        "treino": [1]
+    },
+    {
+        "_id": 5,
+        "mensalidade": 80,
+        "nome": "Charles Souza",
+        "cpf": "775.757.797-27",
+        "dt_nascimento": "02-08-1989",
+        "telefone": "(16) 95545-4545",
+        "avaliacao_fisica": [
+            {
+                "id_avaliacao": 1,
+                "peso": 95,
+                "altura": 1.72,
+                "porcentagem_gordura": 45,
+                "porcentagem_massa_magra": 38,
+            }
+        ],
+        "treino": [4]
+    }
+])
+
+//Atualizar um aluno:
+db.alunos.updateOne(
+    {"_id":5},{$set: {"telefone": "(16) 91111-1111"}}
+)
+db.alunos.updateOne({"_id":1},{$set:{"telefone": ["(16) 95545-4545","(16) 91111-1111"]}})
+
+//Criando Collection Treinos
+db.treino.insertMany([
+    {
+        "_id": 1,
+        "nome": "Peito e Triceps",
+        "exercicios": [
+            {
+                "id_exercicio": 1,
+                "nome": "Supino Reto",
+                "serie": 5,
+                "repeticoes": 10
+            },
+            {
+                "id_exercicio": 2,
+                "nome": "Supino Inclinado",
+                "serie": 5,
+                "repeticoes": 10
+            },
+            {
+                "id_exercicio": 3,
+                "nome": "Crucifixo",
+                "serie": 5,
+                "repeticoes": 10
+            },
+            {
+                "id_exercicio": 4,
+                "nome": "Rosca Invertida",
+                "serie": 5,
+                "repeticoes": 10
+            },
+            {
+                "id_exercicio": 5,
+                "nome": "Corda",
+                "serie": 5,
+                "repeticoes": 10
+            },
+            {
+                "id_exercicio": 6,
+                "nome": "Corda Testa",
+                "serie": 5,
+                "repeticoes": 10
+            }
+        ]
+    },
+    {
+        "_id": 2,
+        "nome": "Perna",
+        "exercicios": [
+            {
+                "id_exercicio": 7,
+                "nome": "Leg Press",
+                "serie": 5,
+                "repeticoes": 10
+            },
+            {
+                "id_exercicio": 8,
+                "nome": "Panturrilha",
+                "serie": 5,
+                "repeticoes": 10
+            },
+            {
+                "id_exercicio": 9,
+                "nome": "Extensor",
+                "serie": 5,
+                "repeticoes": 10
+            }
+        ]
+    },
+    {
+        "_id": 3,
+        "nome": "Adaptação",
+        "exercicios": [
+            {
+                "id_exercicio": 7,
+                "nome": "Leg Press",
+                "serie": 5,
+                "repeticoes": 10
+            },
+            {
+                "id_exercicio": 10,
+                "nome": "Esteira",
+                "tempo": "1h"
+            },
+            {
+                "id_exercicio": 4,
+                "nome": "Rosca Invertida",
+                "serie": 5,
+                "repeticoes": 10
+            },
+            {
+                "id_exercicio": 1,
+                "nome": "Supino Reto",
+                "serie": 5,
+                "repeticoes": 10
+            },
+            {
+                "id_exercicio": 11,
+                "nome": "Rosca Direta",
+                "serie": 5,
+                "repeticoes": 10
+            }
+        ]
+    },
+    {
+        "_id": 4,
+        "nome": "Emagrecimento",
+        "exercicios": [
+            {
+                "id_exercicio": 10,
+                "nome": "Esteira",
+                "tempo": "1h"
+            },
+            {
+                "id_exercicio": 12,
+                "nome": "Bike",
+                "tempo": "30m"
+            }
+        ]
+    }
+])
+
+//Comandos de buscas: find e findOne
+db.treino.find()
+db.alunos.findOne({"nome": "Gabriel Jayme"})
+db.treino.findOne({"_id": 1})
+db.treino.findOne({"_id": 2})
+
+//Add em um novo treino com Push
+db.alunos.updateOne({"_id":5}, {$push:{"treino": 2}})
+db.alunos.findOne({"_id":5})
+
+//Removendo um treino com Pull
+db.alunos.updateOne({"_id":1}, {$pull:{"treino": 2}})
+db.alunos.findOne({"_id":1})
+
+//Removendo algum dadode de um Aluno
+db.alunos.updateOne({"_id":1}, {$unset: {"telefone": null}})
+db.alunos.findOne({"_id":1})
+
+//DeleteOne e DeleteMany
+//Deletando o aluno com _id: 1
+db.alunos.deleteOne({"_id":1})
+db.alunos.find()
+
+//Deletando todos os treinos de valor 2:
+db.alunos.deleteMany({"treino":2})
